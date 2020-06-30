@@ -71,9 +71,9 @@ class PurchaseJob extends Job
             ->setIntId($this->transaction->internal_id);
         
         try {
-            $this->client($airtime->getServiceCode())->buy($airtime);
+            $id = $this->client($airtime->getServiceCode())->buy($airtime);
             
-//            $this->transaction->asset   = $token;
+            $this->transaction->asset   = $id;
             $this->transaction->status  = TransactionConstants::SUCCESS;
             $this->transaction->message = 'Transaction completed successfully';
             $this->transaction->save();

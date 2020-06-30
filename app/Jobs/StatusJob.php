@@ -87,8 +87,8 @@ class StatusJob extends Job
         $this->transaction->save();
         
         try {
-            $token                      = $this->client($this->transaction->service_code)->status($this->transaction);
-            $this->transaction->asset   = $token;
+            $id                      = $this->client($this->transaction->service_code)->status($this->transaction);
+            $this->transaction->asset   = $id;
             $this->transaction->status  = TransactionConstants::SUCCESS;
             $this->transaction->message = 'Transaction updated to success by verification worker';
             $this->transaction->save();

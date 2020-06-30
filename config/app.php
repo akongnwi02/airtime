@@ -22,7 +22,9 @@ return [
     'services' => [
         'afrikpay' => [
             'url' => env('AFRIKPAY_URL'),
+            'status_url' => env('AFRIKPAY_STATUS_URL'),
             'key' => env('AFRIKPAY_KEY'),
+            'pwd' => env('AFRIKPAY_PWD'),
             'platform' => env('AFRIKPAY_PLATFORM'),
             
             'mtn_code'  => env('SERVICE_AFRIKPAY_MTN_CODE'),
