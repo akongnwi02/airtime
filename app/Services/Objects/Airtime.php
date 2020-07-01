@@ -45,6 +45,10 @@ class Airtime
      */
     public $amount;
     
+    /**
+     * @var
+     */
+    public $item;
     
     /**
      * @return mixed
@@ -153,5 +157,23 @@ class Airtime
     public function getPhone()
     {
         return $this->phone;
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function getItem()
+    {
+        return $this->item;
+    }
+    
+    /**
+     * @param mixed $item
+     * @return Airtime
+     */
+    public function setItem($item)
+    {
+        $this->item = $item;
+        return $this;
     }
 }

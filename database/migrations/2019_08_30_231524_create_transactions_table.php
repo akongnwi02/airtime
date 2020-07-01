@@ -33,6 +33,7 @@ class CreateTransactionsTable extends Migration
             $table->string('address')->nullable();
             $table->string('name')->nullable();
             $table->string('asset')->nullable();
+            $table->string('item')->nullable();
             $table->string('error_code')->nullable();
             $table->text('error')->nullable();
             $table->text('message')->nullable();

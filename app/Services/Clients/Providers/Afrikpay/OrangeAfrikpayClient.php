@@ -3,15 +3,16 @@
  * Created by PhpStorm.
  * User: devert
  * Date: 6/29/20
- * Time: 11:09 PM
+ * Time: 10:53 PM
  */
 
-namespace App\Services\Clients\Providers;
+namespace App\Services\Clients\Providers\Afrikpay;
 
 
+use App\Services\Clients\Providers\AFrikpayClient;
 use App\Services\Objects\Airtime;
 
-class CamtelAfrikpayClient extends AFrikpayClient
+class OrangeAfrikpayClient extends AFrikpayClient
 {
     /**
      * @param Airtime $airtime

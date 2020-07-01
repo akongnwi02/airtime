@@ -28,6 +28,7 @@ return [
             'platform' => env('AFRIKPAY_PLATFORM'),
             
             'mtn_code'  => env('SERVICE_AFRIKPAY_MTN_CODE'),
+            'mtn_data_code'  => env('SERVICE_AFRIKPAY_MTN_DATA_CODE'),
             'orange_code' => env('SERVICE_AFRIKPAY_ORANGE_CODE'),
             'yoomee_code' => env('SERVICE_AFRIKPAY_YOOMEE_CODE'),
             'nexttel_code' => env('SERVICE_AFRIKPAY_NEXTTEL_CODE'),

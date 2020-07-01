@@ -68,7 +68,8 @@ class PurchaseJob extends Job
         $airtime->setAmount($this->transaction->amount)
             ->setPhone($this->transaction->destination)
             ->setServiceCode($this->transaction->service_code)
-            ->setIntId($this->transaction->internal_id);
+            ->setIntId($this->transaction->internal_id)
+            ->setItem($this->transaction->item);
         
         try {
             $id = $this->client($airtime->getServiceCode())->buy($airtime);

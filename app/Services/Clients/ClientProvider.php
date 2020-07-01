@@ -9,11 +9,12 @@
 namespace App\Services\Clients;
 
 use App\Exceptions\BadRequestException;
-use App\Services\Clients\Providers\CamtelAfrikpayClient;
-use App\Services\Clients\Providers\MtnAfrikpayClient;
-use App\Services\Clients\Providers\NexttelAfrikpayClient;
-use App\Services\Clients\Providers\OrangeAfrikpayClient;
-use App\Services\Clients\Providers\YoomeeAfrikpayClient;
+use App\Services\Clients\Providers\Afrikpay\CamtelAfrikpayClient;
+use App\Services\Clients\Providers\Afrikpay\MtnAfrikpayClient;
+use App\Services\Clients\Providers\Afrikpay\MtnDataAfrikpayClient;
+use App\Services\Clients\Providers\Afrikpay\NexttelAfrikpayClient;
+use App\Services\Clients\Providers\Afrikpay\OrangeAfrikpayClient;
+use App\Services\Clients\Providers\Afrikpay\YoomeeAfrikpayClient;
 use App\Services\Constants\ErrorCodesConstants;
 
 trait ClientProvider
@@ -36,6 +37,11 @@ trait ClientProvider
                 $config['afrikpay_operator'] = 'mtn';
                 $config['afrikpay_service'] = config('app.services.afrikpay.mtn_code');
                 return new MtnAfrikpayClient($config);
+                break;
+            case config('app.services.afrikpay.mtn_data_code'):
+                $config['afrikpay_operator'] = 'mtn_data';
+                $config['afrikpay_service'] = config('app.services.afrikpay.mtn_data_code');
+                return new MtnDataAfrikpayClient($config);
                 break;
             case config('app.services.afrikpay.orange_code'):
                 $config['afrikpay_operator'] = 'orange';
