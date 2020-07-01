@@ -8,8 +8,8 @@
 
 namespace App\Services\Clients\Providers;
 
+use App\Exceptions\BadRequestException;
 use App\Exceptions\GeneralException;
-use App\Models\Transaction;
 use App\Services\Clients\AbstractClient;
 use App\Services\Constants\ErrorCodesConstants;
 use App\Services\Objects\Airtime;
@@ -23,6 +23,7 @@ class AFrikpayClient extends AbstractClient
      * @param Airtime $airtime
      * @return mixed
      * @throws GeneralException
+     * @throws BadRequestException
      */
     public function buy(Airtime $airtime): string
     {
@@ -62,7 +63,6 @@ class AFrikpayClient extends AbstractClient
                 'Error connecting to service provider: ' . $exception->getMessage()
             );
         }
-    
         $content = $response->getBody()->getContents();
     
         Log::debug("{$this->getClientName()}: Response from service provider", [
@@ -78,7 +78,13 @@ class AFrikpayClient extends AbstractClient
         if ($response->getStatusCode() == 200 || $body->code == 200) {
         
             if (!empty($body->result)) {
-                return $body->result;
+    
+                if ($body->result->status == 'SUCCESS') {
+                    return $body->result->operatorid;
+                }
+                if ($body->result->status == 'FAILED') {
+                    throw new BadRequestException(ErrorCodesConstants::GENERAL_CODE, 'Transaction failed during purchase of credit');
+                }
             }
         }
     
@@ -87,10 +93,10 @@ class AFrikpayClient extends AbstractClient
     
     /**
      * @param $transaction
-     * @return Transaction
+     * @return bool
      * @throws GeneralException
      */
-    public function status($transaction): string
+    public function status($transaction): bool
     {
         Log::info("{$this->getClientName()}: Sending status check request to service provider", [
             'phone number' => $transaction->destination,
@@ -147,7 +153,16 @@ class AFrikpayClient extends AbstractClient
         if ($response->getStatusCode() == 200 || $body->code == 200) {
         
             if (!empty($body->result)) {
-                return $body->result->txnid;
+                $transaction->asset = $body->result->txnid;
+                $transaction->save();
+                
+                if ($body->result->status == 'SUCCESS') {
+                    return true;
+                } else if ($body->result->status == 'FAILED') {
+                    return false;
+                } else {
+                    throw new GeneralException(ErrorCodesConstants::GENERAL_CODE, 'Transaction status is in an unexpected state. Transaction needs to be re-checked with service provider');
+                }
             }
         }
     
@@ -163,6 +178,10 @@ class AFrikpayClient extends AbstractClient
             'timeout'         => 120,
             'connect_timeout' => 120,
             'allow_redirects' => true,
+            'headers'  => [
+                'content-type' => 'application/json',
+                'Accept' => 'application/json'
+            ],
         ]);
     }
 }

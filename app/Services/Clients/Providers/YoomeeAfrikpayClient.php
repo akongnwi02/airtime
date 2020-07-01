@@ -17,13 +17,19 @@ class YoomeeAfrikpayClient extends AFrikpayClient
      * @param Airtime $airtime
      * @return string
      * @throws \App\Exceptions\GeneralException
+     * @throws \App\Exceptions\BadRequestException
      */
     public function buy(Airtime $airtime): string
     {
         return parent::buy($airtime);
     }
     
-    public function status($transaction): string
+    /**
+     * @param $transaction
+     * @return bool
+     * @throws \App\Exceptions\GeneralException
+     */
+    public function status($transaction): bool
     {
         return parent::status($transaction);
     }

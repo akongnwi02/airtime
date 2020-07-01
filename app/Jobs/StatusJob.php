@@ -37,7 +37,7 @@ class StatusJob extends Job
      * Number of retries
      * @var int
      */
-    public $tries = 5;
+    public $tries = 10;
     
     /**
      * Create a new job instance.
@@ -87,13 +87,17 @@ class StatusJob extends Job
         $this->transaction->save();
         
         try {
-            $id                      = $this->client($this->transaction->service_code)->status($this->transaction);
-            $this->transaction->asset   = $id;
-            $this->transaction->status  = TransactionConstants::SUCCESS;
-            $this->transaction->message = 'Transaction updated to success by verification worker';
+            $success = $this->client($this->transaction->service_code)->status($this->transaction);
+            if ($success) {
+                $this->transaction->status  = TransactionConstants::SUCCESS;
+                $this->transaction->message = "Transaction updated to SUCCESS by verification worker";
+            } else {
+                $this->transaction->status  = TransactionConstants::FAILED;
+                $this->transaction->message = 'Transaction updated to FAILED by verification worker';
+            }
             $this->transaction->save();
             
-            Log::info("{$this->getJobName()}: Status updated to success, inserting transaction to callback queue", [
+            Log::info("{$this->getJobName()}: Transaction status updated to {$this->transaction->status}, inserting transaction to callback queue", [
                 'status'         => $this->transaction->status,
                 'asset'          => $this->transaction->asset,
                 'transaction.id' => $this->transaction->id,

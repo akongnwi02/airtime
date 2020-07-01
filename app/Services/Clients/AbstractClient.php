@@ -33,9 +33,9 @@ abstract class AbstractClient
     
     /**
      * @param $transaction
-     * @return Transaction
+     * @return bool
      */
-    public abstract function status($transaction): string;
+    public abstract function status($transaction): bool;
     
     /**
      * @return string
